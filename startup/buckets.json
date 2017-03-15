@@ -1,0 +1,12 @@
+[
+  {
+    "name": "default",
+    "ramQuotaMB": 100,
+    "bucketType": "membase",
+    "authType": "sasl",
+    "saslPassword": "",
+    "evictionPolicy": "fullEviction",
+    "replicaNumber": 0,
+    "flushEnabled": 1
+  }
+]

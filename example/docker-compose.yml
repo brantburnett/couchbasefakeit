@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  couchbase:
+    image: couchbase
+    build:
+      context: .
+    ports:
+      - "8091-8094:8091-8094"
+      - "11207:11027"
+      - "11210:11210"
