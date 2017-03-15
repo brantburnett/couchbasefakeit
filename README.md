@@ -115,4 +115,4 @@ To shut down and cleanup:
 
 1. `docker-compose down`
 
-For more detailed examples of fakeit models, see https://github.com/bentonam/fakeit-examples.
+For more detailed examples of fakeit models, see https://github.com/bentonam/fakeit/tree/dev/test/fixtures/models.
