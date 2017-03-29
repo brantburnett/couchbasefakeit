@@ -31,11 +31,8 @@ if [ ! -e "/node-initialized" ] ; then
 			&& break
 			
 			echo "Waiting for query service..."
-			sleep 2
+			sleep 1
 		done
-
-		# Query service still needs a bit to finish startup after ping succeeds
-		sleep 5
 	fi
 	
 	# Create buckets defined in /startup/buckets.json
@@ -71,10 +68,11 @@ if [ ! -e "/node-initialized" ] ; then
 		if [ -e "/startup/$bucketName/indexes.n1ql" ]; then
 			echo "Building indexes on $bucketName..."
 			
-			/opt/couchbase/bin/cbq -q=true -f="/startup/$bucketName/indexes.n1ql"
+			/opt/couchbase/bin/cbq -e http://127.0.0.1:8093/ -q=true -f="/startup/$bucketName/indexes.n1ql"
 
 			# Wait for index build completion
-			until [ `/opt/couchbase/bin/cbq -q=true -s="SELECT COUNT(*) as unbuilt FROM system:indexes WHERE keyspace_id = '$bucket' AND state <> 'online'" | \
+			until [ `/opt/couchbase/bin/cbq -e http://127.0.0.1:8093/ -q=true \
+			         -s="SELECT COUNT(*) as unbuilt FROM system:indexes WHERE keyspace_id = '$bucket' AND state <> 'online'" | \
 					 sed -n -e '/{/,$p' | \
 					 jq -r '.results[].unbuilt'` -eq 0 ];
 			do
