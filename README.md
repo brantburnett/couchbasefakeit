@@ -1,6 +1,6 @@
 ## Overview
 
-couchbasefakeit is a Docker image designed for testing and local development.  It starts up a single, standalone [Couchbase Server](http://couchbase.com) instance within a Docker container and initializes it with buckets, indexes, and fake data that you define.  Fake data is generated using [fakeit](https://www.npmjs.com/package/fakeit).
+couchbasefakeit is a Docker image designed for testing and local development.  It starts up a single, standalone [Couchbase Server](http://couchbase.com) instance within a Docker container and initializes it with buckets, indexes, and fake data that you define.  Fake data is generated using [FakeIt](https://www.npmjs.com/package/fakeit).
 
 This can be very useful in reducing developer friction, providing a way to quickly and easily spin up a Couchbase server preinitialized for your application.  By including an Dockerfile and associated configuration files within your source control repo, you can version your development data definitions along with your application.
 
@@ -12,7 +12,9 @@ The latest version can be pulled using:
 docker pull btburnett3/couchbasefakeit:latest
 ```
 
-The `latest` tag will be the latest Enterprise edition of Couchbase, with the latest release of fakeit.  Specific versions may also be available, such as `enterprise-4.6.0-1.0.5`.  This would be the Enterprise edition of Couchbase, version 4.6.0, with fakeit 1.0.5.
+The `latest` tag will be the latest Enterprise edition of Couchbase, with the latest release of FakeIt.
+
+Specific versions may also be available, such as `enterprise-4.6.0-1.0.5-2`.  This would be the Enterprise edition of Couchbase, version 4.6.0, with FakeIt 1.0.5, second revision.  The tag `enterprise-4.6.0-1.0.5` will pull the latest revision, and `enterprise-4.6.0` will pull the FakeIt version and revision targeting Enterprise 4.6.0.
 
 ## Using couchbasefakeit
 
@@ -78,11 +80,11 @@ Attribute names and values in this file correspond with the [Couchbase REST API 
 
 If this file is not overridden in your image, it will create a single bucket named `default` with a RAM quota of 100MB.
 
-### Generating Data With fakeit
+### Generating Data With FakeIt
 
-To generate data with fakeit, create a directory underneath `/startup` with the name of your bucket, and directory beneath that named `models`.  For example, `/startup/sample/models`.  Note that the names are case sensitive.  Add your fakeit YAML models to the models directory.
+To generate data with FakeIt, create a directory underneath `/startup` with the name of your bucket, and directory beneath that named `models`.  For example, `/startup/sample/models`.  Note that the names are case sensitive.  Add your FakeIt YAML models to the models directory.
 
-Fakeit will be run using these models automatically during startup.  
+FakeIt will be run using these models automatically during startup.  
 You may also include inputs, such as CSV files, in the image to be referenced by the models.
 
 This process will be run before indexes are created so that index updates don't degrade the performance of the data inserts.
@@ -115,4 +117,4 @@ To shut down and cleanup:
 
 1. `docker-compose down`
 
-For more detailed examples of fakeit models, see https://github.com/bentonam/fakeit/tree/dev/test/fixtures/models.
+For more detailed examples of FakeIt models, see https://github.com/bentonam/fakeit/tree/dev/test/fixtures/models.
