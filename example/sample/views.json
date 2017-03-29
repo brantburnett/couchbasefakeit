@@ -1,0 +1,9 @@
+{
+  "customers": {
+    "views": {
+        "CustomersByFirstName": {
+            "map": "function (doc, meta) {\n  if ((doc.type === \"customer\") && doc.firstName) {\n    emit(doc.firstName, null);\n  }\n}"
+        }
+    }
+  }
+}

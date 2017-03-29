@@ -89,6 +89,24 @@ You may also include inputs, such as CSV files, in the image to be referenced by
 
 This process will be run before indexes are created so that index updates don't degrade the performance of the data inserts.
 
+### Creating Views
+
+To create views, add a directory underneath `/startup` with the name of your bucket and a text file named `views.json`.  This file should be a JSON object with one or more design document specifications.  The name of each attribute should be the name of the design document.
+
+```json
+{
+  "customers": {
+    "views": {
+        "CustomersByFirstName": {
+            "map": "function (doc, meta) {\n  if ((doc.type === \"customer\") && doc.firstName) {\n    emit(doc.firstName, null);\n  }\n}"
+        }
+    }
+  }
+}
+```
+
+Examples of the syntax for design documents can be found [in the Couchbase documentation](https://developer.couchbase.com/documentation/server/current/rest-api/rest-ddocs-create.html).  Note that `views.json` has an extra nesting level above the Couchbase examples, as it supports more than one design document in a single file.
+
 ### Creating Indexes
 
 To create indexes, add a directory underneath `/startup` with the name of your bucket and a text file named `indexes.n1ql`.  For example, `/startup/default/indexes.n1ql`.  Note that the names are case sensitive.
