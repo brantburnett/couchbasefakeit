@@ -1,0 +1,10 @@
+# Autodetect text files
+* text=auto
+
+*.sh text
+Dockerfile text
+*.yml text
+*.md text
+*.json text
+*.n1ql text
+*.csv text
