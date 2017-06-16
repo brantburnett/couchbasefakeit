@@ -119,6 +119,21 @@ CREATE INDEX `Types` ON default (`type`) WITH {"defer_build": true};
 BUILD INDEX ON default (`#primary`, `Types`)
 ```
 
+### Creating Full Text Search Indexes
+
+To create FTS indexes, add a directory underneath `/startup` with the name of your bucket, and underneath that a `fts` directory.  Within that, add a json file for each index, with the file name being the index name.  For example, `/startup/default/fts/my_index.json`.  Note that names are case sensitive.
+
+Within this file, place the JSON index definition.  This can be easily exported from the Couchbase Console.
+
+To create FTS index aliases, add an additional file in the same folder named `aliases.json`.  This file should be an object with each attribute being an alias name, and the value being an array of index names.
+
+```json
+{
+    "my_alias": ["my_index"],
+    "my_second_alias": ["my_index_2", "my_index_3"]
+}
+```
+
 ### Example
 
 An example image configuration can be found [here](example/).

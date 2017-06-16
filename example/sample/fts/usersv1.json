@@ -1,0 +1,90 @@
+{
+  "type": "fulltext-index",
+  "name": "usersv1",
+  "uuid": "563358b30b77b28c",
+  "sourceType": "couchbase",
+  "sourceName": "sample",
+  "sourceUUID": "ab92f472ab7378c0a0765dc06b47ffd3",
+  "planParams": {
+    "maxPartitionsPerPIndex": 32,
+    "numReplicas": 0,
+    "hierarchyRules": null,
+    "nodePlanParams": null,
+    "pindexWeights": null,
+    "planFrozen": false
+  },
+  "params": {
+    "doc_config": {
+      "mode": "type_field",
+      "type_field": "type"
+    },
+    "mapping": {
+      "default_analyzer": "standard",
+      "default_datetime_parser": "dateTimeOptional",
+      "default_field": "_all",
+      "default_mapping": {
+        "display_order": "1",
+        "dynamic": true,
+        "enabled": false
+      },
+      "default_type": "_default",
+      "index_dynamic": true,
+      "store_dynamic": false,
+      "type_field": "type",
+      "types": {
+        "user": {
+          "display_order": "0",
+          "dynamic": true,
+          "enabled": true,
+          "properties": {
+            "first_name": {
+              "dynamic": false,
+              "enabled": true,
+              "fields": [
+                {
+                  "analyzer": "",
+                  "display_order": "1",
+                  "include_in_all": true,
+                  "include_term_vectors": true,
+                  "index": true,
+                  "name": "first_name",
+                  "store": true,
+                  "type": "text"
+                }
+              ]
+            },
+            "last_name": {
+              "dynamic": false,
+              "enabled": true,
+              "fields": [
+                {
+                  "analyzer": "",
+                  "display_order": "0",
+                  "include_in_all": true,
+                  "include_term_vectors": true,
+                  "index": true,
+                  "name": "last_name",
+                  "store": true,
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "store": {
+      "kvStoreName": "mossStore"
+    }
+  },
+  "sourceParams": {
+    "clusterManagerBackoffFactor": 0,
+    "clusterManagerSleepInitMS": 0,
+    "clusterManagerSleepMaxMS": 2000,
+    "dataManagerBackoffFactor": 0,
+    "dataManagerSleepInitMS": 0,
+    "dataManagerSleepMaxMS": 2000,
+    "feedBufferAckThreshold": 0,
+    "feedBufferSizeBytes": 0
+  }
+}
