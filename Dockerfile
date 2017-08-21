@@ -23,4 +23,6 @@ ENV CB_DATARAM=512 CB_INDEXRAM=256 CB_SEARCHRAM=256 \
 	
 # Copy and configure startup script
 COPY ./ /
+RUN chmod +x /configure-node.sh
+
 ENTRYPOINT ["/configure-node.sh"]
