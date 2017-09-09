@@ -20,6 +20,9 @@ RUN npm install -g fakeit && \
 ENV CB_DATARAM=512 CB_INDEXRAM=256 CB_SEARCHRAM=256 \
 	CB_SERVICES=kv,n1ql,index,fts CB_INDEXSTORAGE=forestdb \
 	CB_USERNAME=Administrator CB_PASSWORD=password
+
+RUN mkdir /nodestatus
+VOLUME /nodestatus
 	
 # Copy and configure startup script
 COPY ./ /

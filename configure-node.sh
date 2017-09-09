@@ -3,7 +3,7 @@ set -m
 
 /entrypoint.sh couchbase-server &
 
-if [ ! -e "/node-initialized" ] ; then
+if [ ! -e "/nodestatus/initialized" ] ; then
 	echo "Initializing Couchbase Server..."
 
 	sleep 5
@@ -155,7 +155,7 @@ if [ ! -e "/node-initialized" ] ; then
 
 	# Done
 	echo "Couchbase Server initialized."
-	echo "Initialized `date +"%D %T"`" > /node-initialized
+	echo "Initialized `date +"%D %T"`" > /nodestatus/initialized
 else
 	echo "Couchbase Server already initialized."
 fi
