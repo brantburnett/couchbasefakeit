@@ -95,10 +95,10 @@ if [ ! -e "/nodestatus/initialized" ] ; then
 		if [ -e "/startup/$bucketName/indexes.n1ql" ]; then
 			echo "Building indexes on $bucketName..."
 
-			/opt/couchbase/bin/cbq -e http://127.0.0.1:8093/ -q=true -f="/startup/$bucketName/indexes.n1ql"
+			/opt/couchbase/bin/cbq -e http://127.0.0.1:8093/ -u $CB_USERNAME -p $CB_PASSWORD -q=true -f="/startup/$bucketName/indexes.n1ql"
 
 			# Wait for index build completion
-			until [ `/opt/couchbase/bin/cbq -e http://127.0.0.1:8093/ -q=true \
+			until [ `/opt/couchbase/bin/cbq -e http://127.0.0.1:8093/ -u $CB_USERNAME -p $CB_PASSWORD -q=true \
 			         -s="SELECT COUNT(*) as unbuilt FROM system:indexes WHERE keyspace_id = '$bucket' AND state <> 'online'" | \
 					 sed -n -e '/{/,$p' | \
 					 jq -r '.results[].unbuilt'` -eq 0 ];
