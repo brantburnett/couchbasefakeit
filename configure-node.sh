@@ -72,6 +72,9 @@ if [ ! -e "/nodestatus/initialized" ] ; then
 		echo "Waiting for bucket initialization..."
 		sleep 1
 	done
+	
+	# Extra sleep because our status check doesn't mean the bucket is 100% usable yet
+	sleep 3
 
 	# Run fakeit
 	while read bucketName
