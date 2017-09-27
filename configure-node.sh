@@ -4,8 +4,17 @@ set -m
 /entrypoint.sh couchbase-server &
 
 if [ ! -e "/nodestatus/initialized" ] ; then
-	echo "Initializing Couchbase Server..."
+	CB_VERSION=$(cat /opt/couchbase/VERSION.txt | grep -o "^[0-9]*\.[0-9]*\.[0-9]*")
 
+	echo "Initializing Couchbase Server $CB_VERSION..."
+
+	if [[ $CB_VERSION > "5." && $CB_INDEXSTORAGE == "forestdb" ]]; then
+		# Couchbase 5.0 and later doesn't support forestdb, switch to plasma instead
+		CB_INDEXSTORAGE=plasma
+
+		echo "Switching from forestdb to plasma for index storage."		
+	fi
+	
 	sleep 5
 
 	# Configure cluster, first request may need more time so retry
@@ -70,7 +79,11 @@ if [ ! -e "/nodestatus/initialized" ] ; then
 		if [ -e "/startup/$bucketName/models/" ]; then
 			echo "Building data for $bucketName..."
 
-			fakeit couchbase --bucket "$bucketName" "/startup/$bucketName/models"
+			if [[ $CB_VERSION < "5." ]]; then
+				fakeit couchbase --bucket "$bucketName" "/startup/$bucketName/models"
+			else
+				fakeit couchbase --bucket "$bucketName" -u "$CB_USERNAME" -p "$CB_PASSWORD" "/startup/$bucketName/models"
+			fi
 		fi
 	done < <(cat /startup/buckets.json | jq -r '.[].name')
 
