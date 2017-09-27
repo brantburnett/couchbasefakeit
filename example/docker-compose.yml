@@ -2,10 +2,10 @@ version: '2'
 
 services:
   couchbase:
-    image: couchbase
-    build:
-      context: .
+    image: btburnett3/couchbasefakeit:enterprise-4.6.3
+    volumes:
+      - "./:/startup"
     ports:
       - "8091-8094:8091-8094"
       - "11207:11027"
-      - "11210:11210"
+      - "11210-11211:11210-11211"

@@ -14,7 +14,7 @@ docker pull btburnett3/couchbasefakeit:latest
 
 The `latest` tag will be the latest Enterprise edition of Couchbase, with the latest release of FakeIt.
 
-Specific versions may also be available, such as `enterprise-4.6.0-1.0.5-2`.  This would be the Enterprise edition of Couchbase, version 4.6.0, with FakeIt 1.0.5, second revision.  The tag `enterprise-4.6.0-1.0.5` will pull the latest revision, and `enterprise-4.6.0` will pull the FakeIt version and revision targeting Enterprise 4.6.0.
+Specific versions may also be available, such as `enterprise-4.6.3`.  This would be the Enterprise edition of Couchbase, version 4.6.3.
 
 ## Using couchbasefakeit
 
