@@ -1,4 +1,4 @@
-FROM couchbase/server:enterprise-4.6.3
+FROM couchbase:enterprise-5.0.0
 
 # Configure apt-get for NodeJS
 # Install NPM and NodeJS and jq, with apt-get cleanup
