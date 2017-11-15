@@ -24,8 +24,7 @@ ENV CB_DATARAM=512 CB_INDEXRAM=256 CB_SEARCHRAM=256 \
 RUN mkdir /nodestatus
 VOLUME /nodestatus
 	
-# Copy and configure startup script
+# Copy startup scripts
 COPY ./ /
-RUN chmod +x /configure-node.sh
 
-ENTRYPOINT ["/configure-node.sh"]
+ENTRYPOINT ["/scripts/configure-node.sh"]

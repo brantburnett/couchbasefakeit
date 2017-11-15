@@ -149,7 +149,7 @@ if [ ! -e "/nodestatus/initialized" ] ; then
 					# So make aliasPair an array split by =
 					aliasPair=(${aliasPair//=/ })
 
-					jsonBody=$(jq -c ".name = \"${aliasPair[0]}\"" startup/fts_alias_template.json)
+					jsonBody=$(jq -c ".name = \"${aliasPair[0]}\"" /scripts/fts_alias_template.json)
 
 					# Add a target for each one in the JSON array on the right side of the pair
 					while read -r target; do
