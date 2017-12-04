@@ -80,9 +80,9 @@ if [ ! -e "/nodestatus/initialized" ] ; then
 			echo "Building data for $bucketName..."
 
 			if [[ $CB_VERSION < "5." ]]; then
-				fakeit couchbase --bucket "$bucketName" "/startup/$bucketName/models"
+				fakeit couchbase --bucket "$bucketName" "/startup/$bucketName/models" --timeout $FAKEIT_BUCKETTIMEOUT
 			else
-				fakeit couchbase --bucket "$bucketName" -u "$CB_USERNAME" -p "$CB_PASSWORD" "/startup/$bucketName/models"
+				fakeit couchbase --bucket "$bucketName" -u "$CB_USERNAME" -p "$CB_PASSWORD" "/startup/$bucketName/models" --timeout $FAKEIT_BUCKETTIMEOUT
 			fi
 		fi
 	done < <(cat /startup/buckets.json | jq -r '.[].name')
