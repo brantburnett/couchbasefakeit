@@ -78,12 +78,34 @@ if [ ! -e "/nodestatus/initialized" ] ; then
 	do
 		if [ -e "/startup/$bucketName/models/" ]; then
 			echo "Building data for $bucketName..."
-
-			if [[ $CB_VERSION < "5." ]]; then
-				fakeit couchbase --bucket "$bucketName" "/startup/$bucketName/models" --timeout $FAKEIT_BUCKETTIMEOUT
-			else
-				fakeit couchbase --bucket "$bucketName" -u "$CB_USERNAME" -p "$CB_PASSWORD" "/startup/$bucketName/models" --timeout $FAKEIT_BUCKETTIMEOUT
-			fi
+			
+			triesLeft=5
+			# execute the code block at least once
+			while true; 
+			do
+				# Try and create a document to see if the bucket is initialized, try again if it errored
+				# If the bucket isn't initialized fakeit will error
+				if nodejs scripts/is-the-bucket-ready.js $bucketName $CB_USERNAME $CB_PASSWORD; then
+					if [[ $CB_VERSION < "5." ]]; then
+						fakeit couchbase --bucket "$bucketName" "/startup/$bucketName/models" --timeout $FAKEIT_BUCKETTIMEOUT
+					else
+						fakeit couchbase --bucket "$bucketName" -u "$CB_USERNAME" -p "$CB_PASSWORD" "/startup/$bucketName/models" --timeout $FAKEIT_BUCKETTIMEOUT
+					fi
+					break
+				else
+					if (( $triesLeft > 0)); then
+						echo "Trying again"
+						
+						# Give the bucket a little more time to be ready
+						sleep 3
+					else
+						echo "Data wasn't built"
+					fi
+					((triesLeft--))
+					
+					(( $triesLeft >= 0 )) || break				
+				fi
+			done
 		fi
 	done < <(cat /startup/buckets.json | jq -r '.[].name')
 
