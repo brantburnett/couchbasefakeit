@@ -119,6 +119,10 @@ CREATE INDEX `Types` ON default (`type`) WITH {"defer_build": true};
 BUILD INDEX ON default (`#primary`, `Types`)
 ```
 
+### Creating Indexes with YAML
+
+Alternatively, you may add YAML files with index definitions under the `/startup/<bucketname>/indexes` folder.  This operation uses [couchbase-index-manager](https://www.npmjs.com/package/couchbase-index-manager) to create the indexes.  [See here](https://www.npmjs.com/package/couchbase-index-manager#definition-files) for an explanation of the YAML file format.
+
 ### Creating Full Text Search Indexes
 
 To create FTS indexes, add a directory underneath `/startup` with the name of your bucket, and underneath that a `fts` directory.  Within that, add a json file for each index, with the file name being the index name.  For example, `/startup/default/fts/my_index.json`.  Note that names are case sensitive.

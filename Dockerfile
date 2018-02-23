@@ -12,13 +12,17 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
 	chmod +x jq-linux64 && \
 	mv jq-linux64 $(which jq)
 	
-# Copy startup scripts
-COPY ./ /	
+# Copy package.json
+WORKDIR /scripts
+COPY ./scripts/package*.json ./
 
-# Install fakeit and couchbase
-RUN npm install -g fakeit && \
-    npm install /scripts && \
+# Install fakeit, couchbase-index-manager, and couchbase
+RUN npm install && \
     rm -rf /tmp/* /var/tmp/*
+
+# Copy startup scripts
+COPY ./scripts/ /scripts/
+COPY ./startup/ /startup/
 	
 # Configure default environment
 ENV CB_DATARAM=512 CB_INDEXRAM=256 CB_SEARCHRAM=256 \
@@ -29,4 +33,4 @@ ENV CB_DATARAM=512 CB_INDEXRAM=256 CB_SEARCHRAM=256 \
 RUN mkdir /nodestatus
 VOLUME /nodestatus
 
-ENTRYPOINT ["/scripts/configure-node.sh"]
+ENTRYPOINT ["./configure-node.sh"]

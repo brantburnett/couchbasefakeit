@@ -1,0 +1,6 @@
+name: "#primary"
+is_primary: true
+---
+name: Types
+index_key:
+- type

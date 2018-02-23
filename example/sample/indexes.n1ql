@@ -1,3 +1,0 @@
-CREATE PRIMARY INDEX `#primary` ON sample WITH {"defer_build": true};
-CREATE INDEX `Types` ON sample (`type`) WITH {"defer_build": true};
-BUILD INDEX ON sample (`#primary`, `Types`)

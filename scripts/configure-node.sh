@@ -87,9 +87,13 @@ if [ ! -e "/nodestatus/initialized" ] ; then
 				# If the bucket isn't initialized fakeit will error
 				if nodejs /scripts/is-the-bucket-ready.js $bucketName $CB_USERNAME $CB_PASSWORD $CB_VERSION; then
 					if [[ $CB_VERSION < "5." ]]; then
-						fakeit couchbase --bucket "$bucketName" "/startup/$bucketName/models" --timeout $FAKEIT_BUCKETTIMEOUT
+						/scripts/node_modules/fakeit/bin/fakeit couchbase \
+							--bucket "$bucketName" --timeout $FAKEIT_BUCKETTIMEOUT \
+							"/startup/$bucketName/models"
 					else
-						fakeit couchbase --bucket "$bucketName" -u "$CB_USERNAME" -p "$CB_PASSWORD" "/startup/$bucketName/models" --timeout $FAKEIT_BUCKETTIMEOUT
+						/scripts/node_modules/fakeit/bin/fakeit couchbase \
+							--bucket "$bucketName" -u "$CB_USERNAME" -p "$CB_PASSWORD" --timeout $FAKEIT_BUCKETTIMEOUT \
+							"/startup/$bucketName/models"
 					fi
 					break
 				else
@@ -141,6 +145,13 @@ if [ ! -e "/nodestatus/initialized" ] ; then
 				echo "Waiting for index build on $bucketName..."
 				sleep 2
 			done
+		fi
+
+		if [ -e "/startup/$bucketName/indexes/" ]; then
+			echo "Building indexes on $bucketName..."
+
+			/scripts/node_modules/couchbase-index-manager/bin/couchbase-index-manager \
+				-u $CB_USERNAME -p $CB_PASSWORD sync -f $bucketName /startup/$bucketName/indexes/
 		fi
 
 		# Create FTS indexes
