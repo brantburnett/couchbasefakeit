@@ -150,8 +150,15 @@ if [ ! -e "/nodestatus/initialized" ] ; then
 		if [ -e "/startup/$bucketName/indexes/" ]; then
 			echo "Building indexes on $bucketName..."
 
-			/scripts/node_modules/couchbase-index-manager/bin/couchbase-index-manager \
-				-u $CB_USERNAME -p $CB_PASSWORD sync -f $bucketName /startup/$bucketName/indexes/
+			if [[ $CB_VERSION < "5." ]]; then
+				/scripts/node_modules/couchbase-index-manager/bin/couchbase-index-manager \
+					-u $CB_USERNAME -p $CB_PASSWORD --no-rbac \
+					sync -f $bucketName /startup/$bucketName/indexes/
+			else
+				/scripts/node_modules/couchbase-index-manager/bin/couchbase-index-manager \
+					-u $CB_USERNAME -p $CB_PASSWORD \
+					sync -f $bucketName /startup/$bucketName/indexes/
+			fi
 		fi
 
 		# Create FTS indexes
