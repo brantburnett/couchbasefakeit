@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "couchbase": "^2.4.3",
-    "couchbase-index-manager": "^0.1.5",
+    "couchbase-index-manager": "^0.1.6",
     "fakeit": "^1.4.0"
   }
 }
