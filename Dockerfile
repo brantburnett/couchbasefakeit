@@ -1,8 +1,8 @@
-FROM couchbase:enterprise-5.0.1
+FROM couchbase:enterprise-5.1.0
 
 # Configure apt-get for NodeJS
 # Install NPM and NodeJS and jq, with apt-get cleanup
-RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
 	apt-get install -yq nodejs build-essential jq && \
     apt-get autoremove && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
