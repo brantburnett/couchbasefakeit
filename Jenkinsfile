@@ -1,4 +1,4 @@
-node('git && docker') {
+node('git && linux && docker') {
     def app
     
     stage('Preparation') {
