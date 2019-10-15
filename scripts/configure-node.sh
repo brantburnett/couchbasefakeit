@@ -87,11 +87,11 @@ if [ ! -e "/nodestatus/initialized" ] ; then
 				# If the bucket isn't initialized fakeit will error
 				if nodejs /scripts/is-the-bucket-ready.js $bucketName $CB_USERNAME $CB_PASSWORD $CB_VERSION; then
 					if [[ $CB_VERSION < "5." ]]; then
-						/scripts/node_modules/fakeit/bin/fakeit couchbase \
+						/scripts/node_modules/.bin/fakeit couchbase \
 							--bucket "$bucketName" --timeout $FAKEIT_BUCKETTIMEOUT \
 							"/startup/$bucketName/models"
 					else
-						/scripts/node_modules/fakeit/bin/fakeit couchbase \
+						/scripts/node_modules/.bin/fakeit couchbase \
 							--bucket "$bucketName" -u "$CB_USERNAME" -p "$CB_PASSWORD" --timeout $FAKEIT_BUCKETTIMEOUT \
 							"/startup/$bucketName/models"
 					fi

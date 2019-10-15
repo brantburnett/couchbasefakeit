@@ -2,7 +2,7 @@ FROM couchbase:enterprise-5.1.0
 
 # Configure apt-get for NodeJS
 # Install NPM and NodeJS and jq, with apt-get cleanup
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
 	apt-get install -yq nodejs build-essential jq && \
     apt-get autoremove && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -17,7 +17,7 @@ WORKDIR /scripts
 COPY ./scripts/package*.json ./
 
 # Install fakeit, couchbase-index-manager, and couchbase
-RUN npm install && \
+RUN npm ci && \
     rm -rf /tmp/* /var/tmp/*
 
 # Copy startup scripts

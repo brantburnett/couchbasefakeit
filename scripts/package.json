@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "couchbase": "^2.4.3",
-    "couchbase-index-manager": "^0.1.6",
-    "fakeit": "^1.4.0"
+    "couchbase": "2.6.8",
+    "couchbase-index-manager": "0.7.2",
+    "fakeit": "1.4.0"
   }
 }
