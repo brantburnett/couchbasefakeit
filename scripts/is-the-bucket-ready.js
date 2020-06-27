@@ -12,32 +12,32 @@ var cluster = new couchbase.Cluster("http://127.0.0.1:8091");
 
 // If the couchbase version is 5 or greater then authenticate. For older versions this is unnecessary and will cause an error
 if (parseInt(couchbaseVersion.charAt(0), 10) >= couchbaseVersionSplit) {
-	cluster.authenticate(username, password);
+  cluster.authenticate(username, password);
 }
 
 var bucket = cluster.openBucket(bucketName, err => {
-	if (err) {
-		console.error(`Failed to open bucket connection to ${bucketName}`);
-		process.exit(1);
-	}
+  if (err) {
+    console.error(`Failed to open bucket connection to ${bucketName}`);
+    process.exit(1);
+  }
 });
 
 var key = "ping"
 bucket.upsert(key, "ping", err => {
-	if (err) {		
-		if (err.code !== errorCodeToIgnore) {
-			console.log(err);
-		}
-		process.exit(1);
-	}
-		
-	// Don't keep the ping document in the bucket
-	bucket.remove(key, err => {
-		if (err) {
-			console.log(`${key} document was not removed`);
-			process.exit(1);
-		}
-		
-		process.exit(0);
-	});
+  if (err) {
+    if (err.code !== errorCodeToIgnore) {
+      console.log(err);
+    }
+    process.exit(1);
+  }
+
+  // Don't keep the ping document in the bucket
+  bucket.remove(key, err => {
+    if (err) {
+      console.log(`${key} document was not removed`);
+      process.exit(1);
+    }
+
+    process.exit(0);
+  });
 });
