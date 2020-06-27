@@ -2,14 +2,9 @@ name: Docker
 
 on:
   push:
-    # Publish `master` as Docker `latest` image.
     branches:
       - master
       - buildtest
-
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
 
   # Run tests for any PRs.
   pull_request:
@@ -25,7 +20,10 @@ jobs:
     
     strategy:
       matrix:
-        couchbase-version: ["enterprise-6.5.1"]
+        couchbase-version:
+          - enterprise-6.0.4
+          - enterprise-6.5.0
+          - enterprise-6.5.1
 
     steps:
       - uses: actions/checkout@v2
@@ -36,7 +34,7 @@ jobs:
             docker-compose --file docker-compose.test.yml build
             docker-compose --file docker-compose.test.yml run sut
           else
-            docker build . --file Dockerfile
+            docker build . --file Dockerfile --build-arg COUCHBASE_TAG=${{ matrix.couchbase-version }}
           fi
 
   # Push image to GitHub Packages.
@@ -50,13 +48,16 @@ jobs:
     
     strategy:
       matrix:
-        couchbase-version: ["enterprise-6.5.1"]
+        couchbase-version:
+          - enterprise-6.0.4
+          - enterprise-6.5.0
+          - enterprise-6.5.1
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Build image
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME
+        run: docker build . --file Dockerfile  --build-arg COUCHBASE_TAG=${{ matrix.couchbase-version }} --tag $IMAGE_NAME
 
       - name: Log into registry
         run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u btburnett3 --password-stdin
@@ -65,5 +66,5 @@ jobs:
         run: |
           echo VERSION=$VERSION
 
-          docker tag $IMAGE_NAME $IMAGE_NAME:test
-          docker push $IMAGE_NAME:test
+          docker tag $IMAGE_NAME $IMAGE_NAME:${{ matrix.couchbase-version }}
+          docker push $IMAGE_NAME:${{ matrix.couchbase-version }}
