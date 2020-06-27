@@ -1,0 +1,73 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - master
+
+  # Run tests for any PRs.
+  pull_request:
+    
+env:
+  IMAGE_NAME: btburnett3/couchbasefakeit
+
+jobs:
+  # Run tests.
+  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        couchbase-version:
+          - enterprise-5.0.1
+          - enterprise-5.1.1
+          - enterprise-5.5.2
+          - enterprise-6.0.3
+          - enterprise-6.5.1
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run tests
+        run: |
+          if [ -f docker-compose.test.yml ]; then
+            docker-compose --file docker-compose.test.yml build
+            docker-compose --file docker-compose.test.yml run sut
+          else
+            docker build . --file Dockerfile --build-arg COUCHBASE_TAG=${{ matrix.couchbase-version }}
+          fi
+
+  # Push image to GitHub Packages.
+  # See also https://docs.docker.com/docker-hub/builds/
+  push:
+    # Ensure test job passes before pushing image.
+    needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    
+    strategy:
+      matrix:
+        couchbase-version:
+          - enterprise-5.0.1
+          - enterprise-5.1.1
+          - enterprise-5.5.2
+          - enterprise-6.0.3
+          - enterprise-6.5.1
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: docker build . --file Dockerfile  --build-arg COUCHBASE_TAG=${{ matrix.couchbase-version }} --tag $IMAGE_NAME
+
+      - name: Log into registry
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u btburnett3 --password-stdin
+
+      - name: Push image
+        run: |
+          echo Version: ${{ matrix.couchbase-version }}
+
+          docker tag $IMAGE_NAME $IMAGE_NAME:${{ matrix.couchbase-version }}
+          docker push $IMAGE_NAME:${{ matrix.couchbase-version }}
