@@ -1,4 +1,5 @@
-FROM couchbase:enterprise-5.1.0
+ARG COUCHBASE_TAG=enterprise-6.5.1
+FROM couchbase:${COUCHBASE_TAG}
 
 # Configure apt-get for NodeJS
 # Install NPM and NodeJS and jq, with apt-get cleanup
