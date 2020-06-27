@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - buildtest
 
   # Run tests for any PRs.
   pull_request:
@@ -21,8 +20,10 @@ jobs:
     strategy:
       matrix:
         couchbase-version:
+          - enterprise-5.0.1
+          - enterprise-5.1.1
+          - enterprise-5.5.2
           - enterprise-6.0.3
-          - enterprise-6.5.0
           - enterprise-6.5.1
 
     steps:
@@ -49,8 +50,10 @@ jobs:
     strategy:
       matrix:
         couchbase-version:
+          - enterprise-5.0.1
+          - enterprise-5.1.1
+          - enterprise-5.5.2
           - enterprise-6.0.3
-          - enterprise-6.5.0
           - enterprise-6.5.1
 
     steps:
@@ -64,7 +67,7 @@ jobs:
 
       - name: Push image
         run: |
-          echo VERSION=$VERSION
+          echo Version: ${{ matrix.couchbase-version }}
 
           docker tag $IMAGE_NAME $IMAGE_NAME:${{ matrix.couchbase-version }}
           docker push $IMAGE_NAME:${{ matrix.couchbase-version }}
