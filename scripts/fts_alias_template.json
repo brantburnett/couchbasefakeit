@@ -1,10 +1,10 @@
 {
-	"name": "",
-	"type": "fulltext-alias",
-	"sourceType": "nil",
-	"sourceName": "",
-	"params": {
-		"targets": {
-		}
-	}
+  "name": "",
+  "type": "fulltext-alias",
+  "sourceType": "nil",
+  "sourceName": "",
+  "params": {
+    "targets": {
+    }
+  }
 }
