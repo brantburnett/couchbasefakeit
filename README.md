@@ -1,3 +1,5 @@
+# CouchbaseFakeIt
+
 ## Overview
 
 couchbasefakeit is a Docker image designed for testing and local development.  It starts up a single, standalone [Couchbase Server](http://couchbase.com) instance within a Docker container and initializes it with buckets, indexes, and fake data that you define.  Fake data is generated using [FakeIt](https://www.npmjs.com/package/fakeit).
@@ -84,7 +86,7 @@ If this file is not overridden in your image, it will create a single bucket nam
 
 To generate data with FakeIt, create a directory underneath `/startup` with the name of your bucket, and directory beneath that named `models`.  For example, `/startup/sample/models`.  Note that the names are case sensitive.  Add your FakeIt YAML models to the models directory.
 
-FakeIt will be run using these models automatically during startup.  
+FakeIt will be run using these models automatically during startup.
 You may also include inputs, such as CSV files, in the image to be referenced by the models.
 
 This process will be run before indexes are created so that index updates don't degrade the performance of the data inserts.
@@ -137,6 +139,57 @@ To create FTS index aliases, add an additional file in the same folder named `al
     "my_second_alias": ["my_index_2", "my_index_3"]
 }
 ```
+
+### Creating Events
+
+[Couchbase Eventing](https://docs.couchbase.com/server/current/eventing/eventing-overview.html) allows
+document mutations from a bucket to be streamed, processed using Javascript, and outputs performed such
+as storing new documents in another bucket. CouchbaseFakeIt can create and deploy these events
+automatically on startup.
+
+First, add a directory within your startup folder named `events`. Within this directory, add two files for
+each event you'd like to deploy.
+
+`event-name.json` will have configuration, specifically the `depcfg` configuration for source buckets,
+metadata buckets, and buckets which may be referenced by the event. An easy way to get these settings is
+to manually configure an event, then get the definition from `http://localhost:8096/api/v1/functions`
+(use HTTP Basic Authentication).
+
+```json
+{
+  "depcfg": {
+    "buckets": [
+      {
+        "alias": "dst",
+        "bucket_name": "default",
+        "access": "rw"
+      }
+    ],
+    "curl": [],
+    "metadata_bucket": "default",
+    "source_bucket": "sample"
+  }
+}
+```
+
+The second file should have the same name but a `.js` extension, `event-name.js`. This file
+contains the Javascript for the event.
+
+```js
+function OnUpdate(doc, meta) {
+  // This example event copies all documents from the "example" bucket to the "default" bucket
+
+  dst[meta.id] = doc;
+}
+
+function OnDelete(meta) {
+}
+```
+
+The event will be automatically deployed once it is created with the "Everything" feed boundary.
+This means that all documents in the source bucket should be processed by the event at startup,
+including any documents created from models. However, the `/nodestatus/initialized` file will be
+created before all documents are processed, as events are asynchronous in nature.
 
 ### Example
 

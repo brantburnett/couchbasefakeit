@@ -21,6 +21,8 @@ if [ ! -e "/nodestatus/initialized" ] ; then
     $scriptPath/create-fts-indexes.sh $bucketName
   done < <(cat /startup/buckets.json | jq -r '.[].name')
 
+  $scriptPath/create-events.sh
+
   # Done
   echo "Couchbase Server initialized."
   echo "Initialized `date +"%D %T"`" > /nodestatus/initialized
