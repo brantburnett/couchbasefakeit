@@ -10,5 +10,8 @@
     "curl": [],
     "metadata_bucket": "default",
     "source_bucket": "sample"
+  },
+  "settings": {
+    "worker_count": 3
   }
 }
