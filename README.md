@@ -151,8 +151,9 @@ First, add a directory within your startup folder named `events`. Within this di
 each event you'd like to deploy.
 
 `event-name.json` will have configuration, specifically the `depcfg` configuration for source buckets,
-metadata buckets, and buckets which may be referenced by the event. An easy way to get these settings is
-to manually configure an event, then get the definition from `http://localhost:8096/api/v1/functions`
+metadata buckets, and buckets which may be referenced by the event. The `settings` attribute can also be
+used to override any settings, defaults apply for any excluded settings. An easy way to get these
+settings is to manually configure an event and then get the definition from `http://localhost:8096/api/v1/functions`
 (use HTTP Basic Authentication).
 
 ```json
@@ -168,6 +169,9 @@ to manually configure an event, then get the definition from `http://localhost:8
     "curl": [],
     "metadata_bucket": "default",
     "source_bucket": "sample"
+  },
+  "settings": {
+    "worker_count": 3
   }
 }
 ```
@@ -191,6 +195,10 @@ This means that all documents in the source bucket should be processed by the ev
 including any documents created from models. However, the `/nodestatus/initialized` file will be
 created before all documents are processed, as events are asynchronous in nature.
 
+Also, note that by default logging will be set to the DEBUG level and each event will use only 1
+worker. This is because CouchbaseFakeIt is intended for local machine development or CI testing.
+These settings can be overridden in the JSON file in the `settings` attribute.
+
 ### Example
 
 An example image configuration can be found [here](example/).
@@ -201,7 +209,7 @@ To run the example locally:
 2. `git clone https://github.com/brantburnett/couchbasefakeit.git`
 3. `cd couchbasefakeit/example`
 4. `docker-compose up -d`
-5. The server will be accessible at http://localhost:8091 after 15-30 seconds. The username is "Administrator", password is "mypassword".
+5. The server will be accessible at http://localhost:8091 after 15-30 seconds. The username is "Administrator", password is "password".
 
 To shut down and cleanup:
 

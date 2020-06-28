@@ -9,10 +9,10 @@
         "deployment_status": true,
         "description": "",
         "execution_timeout": 60,
-        "log_level": "INFO",
+        "log_level": "DEBUG",
         "n1ql_consistency": "none",
         "processing_status": true,
         "user_prefix": "eventing",
-        "worker_count": 3
+        "worker_count": 1
     }
 }
