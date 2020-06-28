@@ -27,3 +27,15 @@ if [[ $CB_SERVICES == *"fts"* ]]; then
     sleep 1
   done
 fi
+
+if [[ $CB_SERVICES == *"eventing"* ]]; then
+  # Wait for the eventing service to be up and running
+  for attempt in $(seq 10)
+  do
+    curl -s http://127.0.0.1:8096/api/v1/functions > /dev/null \
+      && break
+
+    echo "Waiting for eventing service..."
+    sleep 1
+  done
+fi

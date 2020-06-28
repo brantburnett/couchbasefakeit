@@ -7,12 +7,12 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
 	apt-get install -yq nodejs build-essential jq && \
     apt-get autoremove && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-	
-# Upgrade to jq 1.5
-RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
+
+# Upgrade to jq 1.6
+RUN wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 && \
 	chmod +x jq-linux64 && \
 	mv jq-linux64 $(which jq)
-	
+
 # Copy package.json
 WORKDIR /scripts
 COPY ./scripts/package*.json ./
@@ -24,7 +24,7 @@ RUN npm ci && \
 # Copy startup scripts
 COPY ./scripts/ /scripts/
 COPY ./startup/ /startup/
-	
+
 # Configure default environment
 ENV CB_DATARAM=512 CB_INDEXRAM=256 CB_SEARCHRAM=256 \
 	CB_SERVICES=kv,n1ql,index,fts CB_INDEXSTORAGE=forestdb \
