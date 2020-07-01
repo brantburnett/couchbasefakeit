@@ -7,7 +7,7 @@ on:
 
   # Run tests for any PRs.
   pull_request:
-    
+
 env:
   IMAGE_NAME: btburnett3/couchbasefakeit
 
@@ -16,7 +16,7 @@ jobs:
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
   test:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         couchbase-version:
@@ -29,14 +29,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run tests
+      - name: Build image
         run: |
-          if [ -f docker-compose.test.yml ]; then
-            docker-compose --file docker-compose.test.yml build
-            docker-compose --file docker-compose.test.yml run sut
-          else
-            docker build . --file Dockerfile --build-arg COUCHBASE_TAG=${{ matrix.couchbase-version }}
-          fi
+          docker build -t local:test . --file Dockerfile --build-arg COUCHBASE_TAG=${{ matrix.couchbase-version }}
+
+      - name: Launch
+        uses: btburnett3/run-couchbasefakeit@v0.1
+        with:
+          couchbase-registry: local
+          couchbase-version: test
+          couchbase-configuration: example
 
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
@@ -46,7 +48,7 @@ jobs:
 
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-    
+
     strategy:
       matrix:
         couchbase-version:
