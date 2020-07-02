@@ -31,7 +31,7 @@ until [ `curl -Ss http://127.0.0.1:8091/pools/default/buckets -u $CB_USERNAME:$C
          jq -r .[].nodes[].status | grep '^healthy$' | wc -l` -eq $bucketCount ];
 do
   (( counter++ ))
-  if [ $counter -ge 60 ]; then
+  if [ $counter -ge 20 ]; then
     log_error "Timeout waiting for bucket initialization"
   fi
 
