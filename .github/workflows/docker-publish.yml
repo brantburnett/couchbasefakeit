@@ -16,6 +16,7 @@ jobs:
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     strategy:
       matrix:
@@ -49,6 +50,7 @@ jobs:
 
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
+    timeout-minutes: 10
 
     strategy:
       matrix:
