@@ -30,8 +30,8 @@ counter=0
 until [ `curl -Ss http://127.0.0.1:8091/pools/default/buckets -u $CB_USERNAME:$CB_PASSWORD | \
          jq -r .[].nodes[].status | grep '^healthy$' | wc -l` -eq $bucketCount ];
 do
-  counter=$[$counter + 1]
-  if [[ $counter >= 60 ]]; then
+  (( counter++ ))
+  if [ $counter -ge 60 ]; then
     log_error "Timeout waiting for bucket initialization"
   fi
 
