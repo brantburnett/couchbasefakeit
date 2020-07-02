@@ -34,7 +34,7 @@ jobs:
           docker build -t local:test . --file Dockerfile --build-arg COUCHBASE_TAG=${{ matrix.couchbase-version }}
 
       - name: Launch
-        uses: btburnett3/run-couchbasefakeit@v0.1
+        uses: brantburnett/run-couchbasefakeit@v0.1
         with:
           couchbase-registry: local
           couchbase-version: test
