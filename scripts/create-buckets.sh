@@ -2,8 +2,6 @@
 
 set -o pipefail
 
-EXIT_CODE=0
-
 function log_error() {
   echo $1 >> /nodestatus/errors
   >&2 echo $1
@@ -28,11 +26,15 @@ echo $bucketSettingsList | {
 
 # Wait for the buckets to be healthy
 bucketCount=$(cat /startup/buckets.json | jq -r '.[].name' | wc -l)
+counter=0
 until [ `curl -Ss http://127.0.0.1:8091/pools/default/buckets -u $CB_USERNAME:$CB_PASSWORD | \
          jq -r .[].nodes[].status | grep '^healthy$' | wc -l` -eq $bucketCount ];
 do
+  counter=$[$counter + 1]
+  if [[ $counter >= 60 ]]; then
+    log_error "Timeout waiting for bucket initialization"
+  fi
+
   echo "Waiting for bucket initialization..."
   sleep 1
 done
-
-exit $EXIT_CODE
