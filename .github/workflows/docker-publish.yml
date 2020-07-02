@@ -26,6 +26,9 @@ jobs:
           - enterprise-6.0.3
           - enterprise-6.5.1
 
+    env:
+      CB_STOPONERROR: "1" # Ensure a failure during CouchbaseFakeIt initialization causes test failure
+
     steps:
       - uses: actions/checkout@v2
 
