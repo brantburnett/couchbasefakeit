@@ -216,3 +216,14 @@ To shut down and cleanup:
 1. `docker-compose down`
 
 For more detailed examples of FakeIt models, see https://github.com/bentonam/fakeit/tree/dev/test/fixtures/models.
+
+### Note on Community Edition
+
+If you are using the Couchbase Server Community images, then note that configuration of enterprise features may cause your settings/configuration to fail.
+
+For example:
+
+* Couchbase Server Community does not have Eventing. Therefore any json configuration files in the `events` folder may be ignored or may cause your configuration to fail.
+* Couchbase Server Community does not support `memory_optimized` index storage. Setting CB_INDEXSTORAGE to `memory_optimized` may be ignored or may cause your configuration to fail.
+
+For more information: read about the [differences between Community and Enterprise editions](https://www.couchbase.com/products/editions)
