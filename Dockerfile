@@ -1,4 +1,4 @@
-ARG COUCHBASE_TAG=enterprise-6.5.1
+ARG COUCHBASE_TAG=community-6.5.1
 FROM couchbase:${COUCHBASE_TAG}
 
 # Configure apt-get for NodeJS
