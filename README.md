@@ -47,7 +47,7 @@ The following environment variables can be set to change the Couchbase Server co
 | CB_USERNAME     | Couchbase user name, default `Administrator`                   |
 | CB_PASSWORD     | Couchbase password, default `password`                         |
 
-Values for CB_SERVICES and CB_INDEXSTORAGE correspond to parameters for the [Couchbase REST API](https://developer.couchbase.com/documentation/server/4.6/rest-api/rest-endpoints-all.html).
+Values for CB_SERVICES and CB_INDEXSTORAGE correspond to parameters for the [Couchbase REST API](https://docs.couchbase.com/server/current/rest-api/rest-bucket-create.html).
 
 ### Bucket Configuration
 
@@ -58,7 +58,7 @@ To configure your buckets, simply place a `buckets.json` file in the `/startup` 
   {
     "name": "sample",
     "ramQuotaMB": 100,
-    "bucketType": "membase",
+    "bucketType": "couchbase",
     "authType": "sasl",
     "saslPassword": "",
     "evictionPolicy": "fullEviction",
@@ -68,7 +68,7 @@ To configure your buckets, simply place a `buckets.json` file in the `/startup` 
   {
     "name": "default",
     "ramQuotaMB": 100,
-    "bucketType": "membase",
+    "bucketType": "couchbase",
     "authType": "sasl",
     "saslPassword": "",
     "evictionPolicy": "fullEviction",
