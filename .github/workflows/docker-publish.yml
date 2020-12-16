@@ -7,7 +7,7 @@ on:
 
   # Run tests for any PRs.
   pull_request:
-    
+
 env:
   IMAGE_NAME: btburnett3/couchbasefakeit
 
@@ -16,39 +16,8 @@ jobs:
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
   test:
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        couchbase-version:
-          - enterprise-5.0.1
-          - enterprise-5.1.1
-          - enterprise-5.5.2
-          - enterprise-6.0.3
-          - enterprise-6.5.1
-          - community-6.5.1
-          - enterprise-6.6.0
+    timeout-minutes: 10
 
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Run tests
-        run: |
-          if [ -f docker-compose.test.yml ]; then
-            docker-compose --file docker-compose.test.yml build
-            docker-compose --file docker-compose.test.yml run sut
-          else
-            docker build . --file Dockerfile --build-arg COUCHBASE_TAG=${{ matrix.couchbase-version }}
-          fi
-
-  # Push image to GitHub Packages.
-  # See also https://docs.docker.com/docker-hub/builds/
-  push:
-    # Ensure test job passes before pushing image.
-    needs: test
-
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push'
-    
     strategy:
       matrix:
         couchbase-version:
@@ -64,6 +33,43 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
+        timeout-minutes: 10
+        run: |
+          docker build -t local:test . --file Dockerfile --build-arg COUCHBASE_TAG=${{ matrix.couchbase-version }}
+
+      - name: Launch
+        uses: brantburnett/run-couchbasefakeit@stoponerror
+        with:
+          couchbase-registry: local
+          couchbase-version: test
+          couchbase-configuration: example
+
+  # Push image to GitHub Packages.
+  # See also https://docs.docker.com/docker-hub/builds/
+  push:
+    # Ensure test job passes before pushing image.
+    needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    timeout-minutes: 10
+
+    strategy:
+      matrix:
+        couchbase-version:
+          - enterprise-5.0.1
+          - enterprise-5.1.1
+          - enterprise-5.5.2
+          - enterprise-6.0.3
+          - enterprise-6.5.1
+          - community-6.5.1
+          - enterprise-6.6.0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        timeout-minutes: 10
         run: docker build . --file Dockerfile  --build-arg COUCHBASE_TAG=${{ matrix.couchbase-version }} --tag $IMAGE_NAME
 
       - name: Log into registry
