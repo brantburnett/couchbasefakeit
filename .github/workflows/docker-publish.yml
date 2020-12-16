@@ -27,6 +27,8 @@ jobs:
           - enterprise-6.5.1
           - community-6.5.1
           - enterprise-6.6.0
+          - community-7.0.0-beta
+          - enterprise-7.0.0-beta
 
     steps:
       - uses: actions/checkout@v2
@@ -59,6 +61,8 @@ jobs:
           - enterprise-6.5.1
           - community-6.5.1
           - enterprise-6.6.0
+          - community-7.0.0-beta
+          - enterprise-7.0.0-beta
 
     steps:
       - uses: actions/checkout@v2
