@@ -36,10 +36,14 @@ do
 
           sleep 5
 
+          # Use jq to collection individual JSON documents into a single JSON document so that
+          # cbimport can be used to import the data into the appropriate Couchbase bucket, scope,
+          # and collection
           jq -s '.' /cbdata/*.json > /cbdata/all_documents.json
 
           sleep 5
 
+          # See: https://docs.couchbase.com/server/7.0/tools/cbimport-json.html
           cbimport json -c $DATABASE_URL -u "$CB_USERNAME" -p "$CB_PASSWORD" -b $bucketName -f list \
             --no-ssl-verify -d file:///cbdata/all_documents.json \
             --scope-collection-exp $scope.$collectionField \
