@@ -2,10 +2,10 @@
   {
     "name": "default",
     "ramQuotaMB": 100,
-    "bucketType": "membase",
+    "bucketType": "couchbase",
     "authType": "sasl",
     "saslPassword": "",
-    "evictionPolicy": "fullEviction",
+    "evictionPolicy": "valueOnly",
     "replicaNumber": 0,
     "flushEnabled": 1
   }
