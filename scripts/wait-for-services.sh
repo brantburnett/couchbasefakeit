@@ -20,7 +20,7 @@ if [[ $CB_SERVICES == *"fts"* ]]; then
   # Wait for the FTS service to be up and running
   for attempt in $(seq 10)
   do
-    curl -s http://127.0.0.1:8094/api/ping > /dev/null \
+    curl -s -u $CB_USERNAME:$CB_PASSWORD http://127.0.0.1:8094/api/index > /dev/null \
       && break
 
     echo "Waiting for FTS service..."
@@ -32,7 +32,7 @@ if [[ $CB_SERVICES == *"eventing"* ]]; then
   # Wait for the eventing service to be up and running
   for attempt in $(seq 10)
   do
-    curl -s http://127.0.0.1:8096/api/v1/functions > /dev/null \
+    curl -s -u $CB_USERNAME:$CB_PASSWORD http://127.0.0.1:8096/api/v1/functions > /dev/null \
       && break
 
     echo "Waiting for eventing service..."
