@@ -28,6 +28,18 @@ if [[ $CB_SERVICES == *"fts"* ]]; then
   done
 fi
 
+if [[ $CB_SERVICES == *"cbas"* ]]; then
+  # Wait for the analytics service to be up and running
+  for attempt in $(seq 10)
+  do
+    curl -s -u $CB_USERNAME:$CB_PASSWORD http://localhost:8095/analytics/config/service > /dev/null \
+      && break
+
+    echo "Waiting for analytics service..."
+    sleep 1
+  done
+fi
+
 if [[ $CB_SERVICES == *"eventing"* ]]; then
   # Wait for the eventing service to be up and running
   for attempt in $(seq 10)
