@@ -37,17 +37,22 @@ COPY . /startup/
 
 The following environment variables can be set to change the Couchbase Server configuration:
 
-| Env Variable    | Description                                                    |
-| ------------    | -----------                                                    |
-| CB_DATARAM      | Data service RAM in megabytes, default `512`                   |
-| CB_INDEXRAM     | Index service RAM in megabytes, default `256`                  |
-| CB_SEARCHRAM    | Search (FTS) service RAM in megabytes, default `256`           |
-| CB_SERVICES     | Services to enable, default `kv,n1ql,index,fts`                |
-| CB_INDEXSTORAGE | Index storage mode, `forestdb` (default) or `memory_optimized` |
-| CB_USERNAME     | Couchbase user name, default `Administrator`                   |
-| CB_PASSWORD     | Couchbase password, default `password`                         |
+| Env Variable    | Description                                                                                |
+| ------------    | -----------                                                                                |
+| CB_CLUSTER_NAME | Specify the name of the cluster                                                            |
+| CB_DATARAM      | Data service RAM in megabytes, default `512`                                               |
+| CB_INDEXRAM     | Index service RAM in megabytes, default `256`                                              |
+| CB_SEARCHRAM    | Search (FTS) service RAM in megabytes, default `256`                                       |
+| CB_ANALYTICSRAM | Analytics service RAM in megabytes. Only applicable if `cbas` is added to `CB_SERVICES`    |
+| CB_EVENTINGRAM  | Eventing service RAM in megabytes. Only applicable if `eventing` is added to `CB_SERVICES` |
+| CB_SERVICES     | Services to enable, default `kv,n1ql,index,fts`                                            |
+| CB_INDEXSTORAGE | Index storage mode, `forestdb` (default) or `memory_optimized`                             |
+| CB_USERNAME     | Couchbase user name, default `Administrator`                                               |
+| CB_PASSWORD     | Couchbase password, default `password`                                                     |
 
-Values for CB_SERVICES and CB_INDEXSTORAGE correspond to parameters for the [Couchbase REST API](https://docs.couchbase.com/server/current/rest-api/rest-bucket-create.html).
+Values for CB_SERVICES and CB_INDEXSTORAGE correspond to parameters for the [Couchbase REST API](https://docs.couchbase.com/server/current/rest-api/rest-node-provisioning.html).
+
+**NOTE:** If you configure `CB_SERVICES` to create the `analytics` service, make sure you set `CB_ANALYTICSRAM` to a minimum of `1024`.
 
 ### Bucket Configuration
 
@@ -78,7 +83,7 @@ To configure your buckets, simply place a `buckets.json` file in the `/startup` 
 ]
 ```
 
-Attribute names and values in this file correspond with the [Couchbase REST API create bucket endpoint](https://developer.couchbase.com/documentation/server/4.6/rest-api/rest-bucket-create.html).
+Attribute names and values in this file correspond with the [Couchbase REST API create bucket endpoint](https://docs.couchbase.com/server/current/rest-api/rest-bucket-create.html).
 
 If this file is not overridden in your image, it will create a single bucket named `default` with a RAM quota of 100MB.
 
@@ -118,12 +123,34 @@ Within this file, you can define the `CREATE INDEX` statements for your bucket, 
 ```sql
 CREATE PRIMARY INDEX `#primary` ON default WITH {"defer_build": true};
 CREATE INDEX `Types` ON default (`type`) WITH {"defer_build": true};
-BUILD INDEX ON default (`#primary`, `Types`)
+BUILD INDEX ON default (`#primary`, `Types`);
 ```
 
 ### Creating Indexes with YAML
 
 Alternatively, you may add YAML files with index definitions under the `/startup/<bucketname>/indexes` folder.  This operation uses [couchbase-index-manager](https://www.npmjs.com/package/couchbase-index-manager) to create the indexes.  [See here](https://www.npmjs.com/package/couchbase-index-manager#definition-files) for an explanation of the YAML file format.
+
+### Analytics Dataset Setup
+
+To setup the analytics service datasets, add a directory under the `/startup/<bucketname>/analytics` folder. Within this folder create a text file named `dataset.n1ql`. For example, `/startup/default/analytics/dateset.n1ql`.  Note that the names are case sensitive.
+
+Within this file, you can define the `CREATE DATASET` statements for your bucket, separated by semicolons. **IMPORTANT** Make sure to append the proper `USE` statement to each `CREATE DATASET` statement so that it's placed in the proper DATAVERSE. Additionaly, always end your file with a `CONNECT LINK Local;` statement.
+
+```sql
+CREATE DATAVERSE `sample` IF NOT EXISTS;
+USE `sample`; CREATE DATASET IF NOT EXISTS users ON `sample` WHERE `type` = "user";
+CONNECT LINK Local;
+```
+
+### Creating Analytics Indexes
+
+To create analytics indexes, add a directory under the `/startup/<bucketname>/analytics` folder.  Within this folder create a text file named `indexes.n1ql`. For example, `/startup/default/analytics/indexes.n1ql`.  Note that the names are case sensitive.
+
+Within this file, you can define the `CREATE INDEX` statements for your bucket, separated by semicolons. **IMPORTANT** Make sure your queries always start with a `USE` statment otherwise the query engine will have no idea which DATAVERSE to associate the index with.
+
+```sql
+USE `sample`; CREATE INDEX `idx_users` IF NOT EXISTS ON `sample` (id: string);
+```
 
 ### Creating Full Text Search Indexes
 
