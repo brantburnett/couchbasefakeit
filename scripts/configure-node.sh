@@ -20,7 +20,6 @@ if [ ! -e "/nodestatus/initialized" ] ; then
     $scriptPath/create-n1ql-indexes.sh $bucketName
     $scriptPath/create-fts-indexes.sh $bucketName
     $scriptPath/configure-analytics.sh $bucketName
-    $scriptPath/create-rbac-users.sh $bucketName
   done < <(cat /startup/buckets.json | jq -r '.[].name')
 
   $scriptPath/create-events.sh
