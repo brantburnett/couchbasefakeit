@@ -1,17 +1,5 @@
 #!/bin/bash
 
-DATABASE_URL='couchbase://127.0.0.1'
-
-scope="_default"
-if [[ -n "$FAKE_DATA_SCOPE" ]]; then
-  scope=$FAKE_DATA_SCOPE
-fi
-
-collectionField='_default'
-if [[ -n "$FAKE_DATA_COLLECTION_FIELD" ]]; then
-  collectionField="%$FAKE_DATA_COLLECTION_FIELD%"
-fi
-
 # Run fakeit
 while read bucketName
 do
@@ -29,25 +17,6 @@ do
           /scripts/node_modules/.bin/fakeit couchbase \
             --bucket "$bucketName" --timeout $FAKEIT_BUCKETTIMEOUT \
             "/startup/$bucketName/models"
-        elif [[ $CB_VERSION > "6." ]]; then
-          /scripts/node_modules/.bin/fakeit directory --format json \
-            /cbdata \
-            "/startup/$bucketName/models/*"
-
-          sleep 5
-
-          # Use jq to collection individual JSON documents into a single JSON document so that
-          # cbimport can be used to import the data into the appropriate Couchbase bucket, scope,
-          # and collection
-          jq -s '.' /cbdata/*.json > /cbdata/all_documents.json
-
-          sleep 5
-
-          # See: https://docs.couchbase.com/server/7.0/tools/cbimport-json.html
-          cbimport json -c $DATABASE_URL -u "$CB_USERNAME" -p "$CB_PASSWORD" -b $bucketName -f list \
-            --no-ssl-verify -d file:///cbdata/all_documents.json \
-            --scope-collection-exp $scope.$collectionField \
-            --generate-key %id%
         else
           /scripts/node_modules/.bin/fakeit couchbase \
             --bucket "$bucketName" -u "$CB_USERNAME" -p "$CB_PASSWORD" --timeout $FAKEIT_BUCKETTIMEOUT \
