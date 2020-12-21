@@ -52,7 +52,7 @@ The following environment variables can be set to change the Couchbase Server co
 
 Values for CB_SERVICES and CB_INDEXSTORAGE correspond to parameters for the [Couchbase REST API](https://docs.couchbase.com/server/current/rest-api/rest-node-provisioning.html).
 
-**NOTE:** If you configure `CB_SERVICES` to create the `analytics` service, make sure you set `CB_ANALYTICSRAM` to a minimum of `1024`.
+**NOTE:** If you configure `CB_SERVICES` to create the `cbas` analytics service, make sure you set `CB_ANALYTICSRAM` to a minimum of `1024`.
 
 ### Bucket Configuration
 
@@ -132,24 +132,32 @@ Alternatively, you may add YAML files with index definitions under the `/startup
 
 ### Analytics Dataset Setup
 
-To setup the analytics service datasets, add a directory under the `/startup/<bucketname>/analytics` folder. Within this folder create a text file named `dataset.n1ql`. For example, `/startup/default/analytics/dateset.n1ql`.  Note that the names are case sensitive.
+To setup the analytics service datasets, add a directory under the `/startup/<bucketname>/analytics` folder. Within this folder create a text file named `dataset.json`. For example, `/startup/default/analytics/dataset.json`.  Note that the names are case sensitive.
 
-Within this file, you can define the `CREATE DATASET` statements for your bucket, separated by semicolons. **IMPORTANT** Make sure to append the proper `USE` statement to each `CREATE DATASET` statement so that it's placed in the proper DATAVERSE. Additionaly, always end your file with a `CONNECT LINK Local;` statement.
+Within this file, create a key called `statements` with an array as the value. Within the array you can define your `CREATE DATAVERSE` and `CREATE DATASET` statements for your bucket, separated by semicolons. Below is an example showing what the `dataset.json` structure should look like. **IMPORTANT** Make sure to append the proper `USE` statement to each `CREATE DATASET` statement so that it's placed in the proper DATAVERSE. Additionaly, always end your file with a `CONNECT LINK Local;` statement.
 
-```sql
-CREATE DATAVERSE `sample` IF NOT EXISTS;
-USE `sample`; CREATE DATASET IF NOT EXISTS users ON `sample` WHERE `type` = "user";
-CONNECT LINK Local;
+```json
+{
+  "statements": [
+    "CREATE DATAVERSE `sample` IF NOT EXISTS;",
+    "USE `sample`; CREATE DATASET IF NOT EXISTS users ON `sample` WHERE `type` = \"user\";",
+    "CONNECT LINK Local;"
+  ]
+}
 ```
 
 ### Creating Analytics Indexes
 
-To create analytics indexes, add a directory under the `/startup/<bucketname>/analytics` folder.  Within this folder create a text file named `indexes.n1ql`. For example, `/startup/default/analytics/indexes.n1ql`.  Note that the names are case sensitive.
+To create analytics indexes, add a directory under the `/startup/<bucketname>/analytics` folder.  Within this folder create a text file named `indexes.json`. For example, `/startup/default/analytics/indexes.json`.  Note that the names are case sensitive.
 
-Within this file, you can define the `CREATE INDEX` statements for your bucket, separated by semicolons. **IMPORTANT** Make sure your queries always start with a `USE` statment otherwise the query engine will have no idea which DATAVERSE to associate the index with.
+Within this file, create a key called `statements` with an array as the value. Within the array you can define your `CREATE INDEX` statements for your DATASET, separated by semicolons. **IMPORTANT** Make sure your queries always start with a `USE` statment otherwise the query engine will have no idea which DATAVERSE to associate the index with.
 
-```sql
-USE `sample`; CREATE INDEX `idx_users` IF NOT EXISTS ON `sample` (id: string);
+```json
+{
+  "statements": [
+    "USE `sample`; CREATE INDEX `idx_users` IF NOT EXISTS ON `users` (id: string);"
+  ]
+}
 ```
 
 ### Creating Full Text Search Indexes
