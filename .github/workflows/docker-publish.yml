@@ -20,13 +20,13 @@ jobs:
     strategy:
       matrix:
         couchbase-version:
-          - enterprise-5.0.1
-          - enterprise-5.1.1
           - enterprise-5.5.2
           - enterprise-6.0.3
           - enterprise-6.5.1
           - community-6.5.1
           - enterprise-6.6.0
+          - community-7.0.0-beta
+          - enterprise-7.0.0-beta
 
     steps:
       - uses: actions/checkout@v2
@@ -40,7 +40,6 @@ jobs:
             docker build . --file Dockerfile --build-arg COUCHBASE_TAG=${{ matrix.couchbase-version }}
           fi
 
-  # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     # Ensure test job passes before pushing image.
@@ -52,13 +51,13 @@ jobs:
     strategy:
       matrix:
         couchbase-version:
-          - enterprise-5.0.1
-          - enterprise-5.1.1
           - enterprise-5.5.2
           - enterprise-6.0.3
           - enterprise-6.5.1
           - community-6.5.1
           - enterprise-6.6.0
+          - community-7.0.0-beta
+          - enterprise-7.0.0-beta
 
     steps:
       - uses: actions/checkout@v2
