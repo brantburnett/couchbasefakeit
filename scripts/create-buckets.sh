@@ -16,3 +16,15 @@ do
   echo "Waiting for bucket initialization..."
   sleep 1
 done
+
+echo "Couchbase Version: $CB_VERSION"
+if [[ $CB_VERSION > "6." ]]; then
+  echo "About to create scopes and collections..."
+
+  scriptPath=$(dirname $(realpath $0))
+  # Scopes and collections need created after a bucket is up and running
+  while read bucketName
+  do
+    $scriptPath/create-collections.sh $bucketName
+  done < <(cat /startup/buckets.json | jq -r '.[].name')
+fi

@@ -12,7 +12,7 @@ do
     do
       # Try and create a document to see if the bucket is initialized, try again if it errored
       # If the bucket isn't initialized fakeit will error
-      if nodejs /scripts/is-the-bucket-ready.js $bucketName $CB_USERNAME $CB_PASSWORD $CB_VERSION; then
+      if node /scripts/is-the-bucket-ready.js $bucketName $CB_USERNAME $CB_PASSWORD $CB_VERSION; then
         if [[ $CB_VERSION < "5." ]]; then
           /scripts/node_modules/.bin/fakeit couchbase \
             --bucket "$bucketName" --timeout $FAKEIT_BUCKETTIMEOUT \

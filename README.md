@@ -82,6 +82,49 @@ Attribute names and values in this file correspond with the [Couchbase REST API 
 
 If this file is not overridden in your image, it will create a single bucket named `default` with a RAM quota of 100MB.
 
+### Scopes and Collections
+
+**NOTE:** Only applicable for Couchbase Server 7+
+
+To create scopes and collections, create a file underneath `/startup` with the name of your bucket, and a file with the following name: `collections.json`. For example, `/startup/sample/collections.json`. **Note** Names are case sensitive.
+
+The format of the `collections.json` file should be as follows:
+
+```json
+{
+  "scopes": {
+    "your_scope_name": {
+      "collections": [
+        "your_collection_name_1",
+        "your_collection_name_2",
+        "your_collection_name_3"
+      ]
+    }
+  }
+}
+```
+
+The values to replace are `your_scope_name` and the values in the `collections` array. **Note:** You can use the `_default` scope if you'd like by replacing `your_scope_name` with `_default`. The `_default` scope is automatically created in all buckets and cannot be deleted. You can add multiple scopes each having their own collections. For example:
+
+```json
+{
+  "scopes": {
+    "_default": {
+      "collections": [
+        "default_collection_name_1",
+        "default_collection_name_2"
+      ]
+    },
+    "my_scope": {
+      "collections": [
+        "default_collection_name_1",
+        "default_collection_name_2"
+      ]
+    }
+  }
+}
+```
+
 ### Generating Data With FakeIt
 
 To generate data with FakeIt, create a directory underneath `/startup` with the name of your bucket, and directory beneath that named `models`.  For example, `/startup/sample/models`.  Note that the names are case sensitive.  Add your FakeIt YAML models to the models directory.

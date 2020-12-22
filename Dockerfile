@@ -4,7 +4,7 @@ FROM couchbase:${COUCHBASE_TAG}
 # Configure apt-get for NodeJS
 # Install NPM and NodeJS and jq, with apt-get cleanup
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
-	apt-get install -yq nodejs build-essential jq && \
+	apt-get install -yq build-essential nodejs jq && \
     apt-get autoremove && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
