@@ -141,7 +141,7 @@ Within this file, create a key called `statements` with an array as the value. W
   "statements": [
     "CREATE DATAVERSE `sample` IF NOT EXISTS;",
     "USE `sample`; CREATE DATASET IF NOT EXISTS users ON `sample` WHERE `type` = 'user';",
-    "CONNECT LINK Local;"
+    "USE `sample`; CONNECT LINK Local;"
   ]
 }
 ```
