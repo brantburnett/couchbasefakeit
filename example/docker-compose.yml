@@ -1,10 +1,10 @@
-version: '2'
+version: "3.7"
 
 services:
   couchbase:
     image: btburnett3/couchbasefakeit:enterprise-6.5.1
     environment:
-      - CB_SERVICES=kv,n1ql,index,fts,eventing
+      - CB_SERVICES=kv,n1ql,index,fts,eventing,cbas
     volumes:
       - "./:/startup"
     ports:

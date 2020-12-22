@@ -1,0 +1,5 @@
+{
+  "statements": [
+    "USE `sample`; CREATE INDEX `idx_users` IF NOT EXISTS ON `users` (id: string);"
+  ]
+}

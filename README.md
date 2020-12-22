@@ -37,17 +37,22 @@ COPY . /startup/
 
 The following environment variables can be set to change the Couchbase Server configuration:
 
-| Env Variable    | Description                                                    |
-| ------------    | -----------                                                    |
-| CB_DATARAM      | Data service RAM in megabytes, default `512`                   |
-| CB_INDEXRAM     | Index service RAM in megabytes, default `256`                  |
-| CB_SEARCHRAM    | Search (FTS) service RAM in megabytes, default `256`           |
-| CB_SERVICES     | Services to enable, default `kv,n1ql,index,fts`                |
-| CB_INDEXSTORAGE | Index storage mode, `forestdb` (default) or `memory_optimized` |
-| CB_USERNAME     | Couchbase user name, default `Administrator`                   |
-| CB_PASSWORD     | Couchbase password, default `password`                         |
+| Env Variable    | Description                                                                                |
+| ------------    | -----------                                                                                |
+| CB_CLUSTER_NAME | Specify the name of the cluster                                                            |
+| CB_DATARAM      | Data service RAM in megabytes, default `512`                                               |
+| CB_INDEXRAM     | Index service RAM in megabytes, default `256`                                              |
+| CB_SEARCHRAM    | Search (FTS) service RAM in megabytes, default `256`                                       |
+| CB_ANALYTICSRAM | Analytics service RAM in megabytes. Only applicable if `cbas` is added to `CB_SERVICES`    |
+| CB_EVENTINGRAM  | Eventing service RAM in megabytes. Only applicable if `eventing` is added to `CB_SERVICES` |
+| CB_SERVICES     | Services to enable, default `kv,n1ql,index,fts`                                            |
+| CB_INDEXSTORAGE | Index storage mode, `forestdb` (default) or `memory_optimized`                             |
+| CB_USERNAME     | Couchbase user name, default `Administrator`                                               |
+| CB_PASSWORD     | Couchbase password, default `password`                                                     |
 
-Values for CB_SERVICES and CB_INDEXSTORAGE correspond to parameters for the [Couchbase REST API](https://docs.couchbase.com/server/current/rest-api/rest-bucket-create.html).
+Values for CB_SERVICES and CB_INDEXSTORAGE correspond to parameters for the [Couchbase REST API](https://docs.couchbase.com/server/current/rest-api/rest-node-provisioning.html).
+
+**NOTE:** If you configure `CB_SERVICES` to create the `cbas` analytics service, make sure you set `CB_ANALYTICSRAM` to a minimum of `1024`.
 
 ### Bucket Configuration
 
@@ -78,9 +83,52 @@ To configure your buckets, simply place a `buckets.json` file in the `/startup` 
 ]
 ```
 
-Attribute names and values in this file correspond with the [Couchbase REST API create bucket endpoint](https://developer.couchbase.com/documentation/server/4.6/rest-api/rest-bucket-create.html).
+Attribute names and values in this file correspond with the [Couchbase REST API create bucket endpoint](https://docs.couchbase.com/server/current/rest-api/rest-bucket-create.html).
 
 If this file is not overridden in your image, it will create a single bucket named `default` with a RAM quota of 100MB.
+
+### Scopes and Collections
+
+**NOTE:** Only applicable for Couchbase Server 7+
+
+To create scopes and collections, create a file underneath `/startup` with the name of your bucket, and a file with the following name: `collections.json`. For example, `/startup/sample/collections.json`. **Note** Names are case sensitive.
+
+The format of the `collections.json` file should be as follows:
+
+```json
+{
+  "scopes": {
+    "your_scope_name": {
+      "collections": [
+        "your_collection_name_1",
+        "your_collection_name_2",
+        "your_collection_name_3"
+      ]
+    }
+  }
+}
+```
+
+The values to replace are `your_scope_name` and the values in the `collections` array. **Note:** You can use the `_default` scope if you'd like by replacing `your_scope_name` with `_default`. The `_default` scope is automatically created in all buckets and cannot be deleted. You can add multiple scopes each having their own collections. For example:
+
+```json
+{
+  "scopes": {
+    "_default": {
+      "collections": [
+        "default_collection_name_1",
+        "default_collection_name_2"
+      ]
+    },
+    "my_scope": {
+      "collections": [
+        "default_collection_name_1",
+        "default_collection_name_2"
+      ]
+    }
+  }
+}
+```
 
 ### RBAC Configuration
 
@@ -141,12 +189,42 @@ Within this file, you can define the `CREATE INDEX` statements for your bucket, 
 ```sql
 CREATE PRIMARY INDEX `#primary` ON default WITH {"defer_build": true};
 CREATE INDEX `Types` ON default (`type`) WITH {"defer_build": true};
-BUILD INDEX ON default (`#primary`, `Types`)
+BUILD INDEX ON default (`#primary`, `Types`);
 ```
 
 ### Creating Indexes with YAML
 
 Alternatively, you may add YAML files with index definitions under the `/startup/<bucketname>/indexes` folder.  This operation uses [couchbase-index-manager](https://www.npmjs.com/package/couchbase-index-manager) to create the indexes.  [See here](https://www.npmjs.com/package/couchbase-index-manager#definition-files) for an explanation of the YAML file format.
+
+### Analytics Dataset Setup
+
+To setup the analytics service datasets, add a directory under the `/startup/<bucketname>/analytics` folder. Within this folder create a text file named `dataset.json`. For example, `/startup/default/analytics/dataset.json`.  Note that the names are case sensitive.
+
+Within this file, create a key called `statements` with an array as the value. Within the array you can define your `CREATE DATAVERSE` and `CREATE DATASET` statements for your bucket, separated by semicolons. Below is an example showing what the `dataset.json` structure should look like. **IMPORTANT** Make sure to append the proper `USE` statement to each `CREATE DATASET` statement so that it's placed in the proper DATAVERSE. Additionaly, always end your file with a `CONNECT LINK Local;` statement.
+
+```json
+{
+  "statements": [
+    "CREATE DATAVERSE `sample` IF NOT EXISTS;",
+    "USE `sample`; CREATE DATASET IF NOT EXISTS users ON `sample` WHERE `type` = 'user';",
+    "USE `sample`; CONNECT LINK Local;"
+  ]
+}
+```
+
+### Creating Analytics Indexes
+
+To create analytics indexes, add a directory under the `/startup/<bucketname>/analytics` folder.  Within this folder create a text file named `indexes.json`. For example, `/startup/default/analytics/indexes.json`.  Note that the names are case sensitive.
+
+Within this file, create a key called `statements` with an array as the value. Within the array you can define your `CREATE INDEX` statements for your DATASET, separated by semicolons. **IMPORTANT** Make sure your queries always start with a `USE` statment otherwise the query engine will have no idea which DATAVERSE to associate the index with.
+
+```json
+{
+  "statements": [
+    "USE `sample`; CREATE INDEX `idx_users` IF NOT EXISTS ON `users` (id: string);"
+  ]
+}
+```
 
 ### Creating Full Text Search Indexes
 

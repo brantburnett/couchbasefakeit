@@ -4,7 +4,7 @@ FROM couchbase:${COUCHBASE_TAG}
 # Configure apt-get for NodeJS
 # Install NPM and NodeJS and jq, with apt-get cleanup
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
-	apt-get install -yq nodejs build-essential jq && \
+	apt-get install -yq build-essential nodejs jq && \
     apt-get autoremove && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -26,7 +26,7 @@ COPY ./scripts/ /scripts/
 COPY ./startup/ /startup/
 
 # Configure default environment
-ENV CB_DATARAM=512 CB_INDEXRAM=256 CB_SEARCHRAM=256 \
+ENV CB_DATARAM=512 CB_INDEXRAM=256 CB_SEARCHRAM=256 CB_ANALYTICSRAM=1024 CB_EVENTINGRAM=256 \
 	CB_SERVICES=kv,n1ql,index,fts CB_INDEXSTORAGE=forestdb \
 	CB_USERNAME=Administrator CB_PASSWORD=password \
 	FAKEIT_BUCKETTIMEOUT=5000

@@ -1,0 +1,18 @@
+{
+  "scopes": {
+    "_default": {
+      "collections": [
+        "collection_1",
+        "collection_2",
+        "collection_3"
+      ]
+    },
+    "my_scope": {
+      "collections": [
+        "collection_1",
+        "collection_2",
+        "collection_3"
+      ]
+    }
+  }
+}

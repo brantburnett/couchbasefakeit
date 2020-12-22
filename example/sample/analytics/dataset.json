@@ -1,0 +1,8 @@
+{
+  "statements": [
+    "CREATE DATAVERSE `sample` IF NOT EXISTS;",
+    "USE `sample`; CREATE DATASET IF NOT EXISTS users ON `sample` WHERE `type` = 'user';",
+    "USE `sample`; CONNECT LINK Local;"
+  ]
+}
+
