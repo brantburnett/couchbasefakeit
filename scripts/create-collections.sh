@@ -21,7 +21,7 @@ if [ -e "/startup/$bucketName/collections.json" ]; then
     while read collectionName
     do
       echo "Creating collection: $collectionName..."
-      curl -Ss -X POST -u "$CB_USERNAME:$CB_PASSWORD" http://localhost:8091/pools/default/buckets/$bucketName/collections/$scopeName -d name=$collectionName
+      curl -Ss -X POST -u "$CB_USERNAME:$CB_PASSWORD" http://localhost:8091/pools/default/buckets/$bucketName/collections/$scopeName -d name=$collectionName && echo
     done < <(cat /startup/$bucketName/collections.json | jq -r ".scopes.$scopeName | .collections | .[]")
   done < <(cat /startup/$bucketName/collections.json | jq -r '.scopes | keys[]')
 fi
