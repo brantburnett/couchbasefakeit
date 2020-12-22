@@ -84,7 +84,7 @@ If this file is not overridden in your image, it will create a single bucket nam
 
 ### RBAC Configuration
 
- To configure RBAC users for Couchbase Server versions 5+, create a directory underneath `/startup` with the name of your bucket and a text file named `rbac-users.json`. This file should be an array of JSON objects that define the various users and roles that need to be associated with each user. See the following example on how to structure the file:
+ To configure RBAC users for Couchbase Server versions 5+, simply place a `rbac-users.json` file in the `/startup` directory of your image. This file should be an array of JSON objects that define the various users and roles that need to be associated with each user. See the following example on how to structure the file:
 
  ```json
 [
