@@ -7,7 +7,7 @@ const couchbaseVersionSplit = 5;
 // This error code is expected so ignore it
 const errorCodeToIgnore = 22;
 
-var couchbase = require('couchbase')
+var couchbase = require('couchbase');
 var cluster = new couchbase.Cluster("http://127.0.0.1:8091");
 
 // If the couchbase version is 5 or greater then authenticate. For older versions this is unnecessary and will cause an error
@@ -22,7 +22,7 @@ var bucket = cluster.openBucket(bucketName, err => {
   }
 });
 
-var key = "ping"
+var key = "ping";
 bucket.upsert(key, "ping", err => {
   if (err) {
     if (err.code !== errorCodeToIgnore) {
@@ -32,8 +32,8 @@ bucket.upsert(key, "ping", err => {
   }
 
   // Don't keep the ping document in the bucket
-  bucket.remove(key, err => {
-    if (err) {
+  bucket.remove(key, error => {
+    if (error) {
       console.log(`${key} document was not removed`);
       process.exit(1);
     }

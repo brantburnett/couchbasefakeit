@@ -14,7 +14,20 @@ sleep 5
 # Configure cluster, first request may need more time so retry
 for attempt in $(seq 60)
 do
-  curl -Ss http://127.0.0.1:8091/pools/default -d memoryQuota=$CB_DATARAM -d indexMemoryQuota=$CB_INDEXRAM -d ftsMemoryQuota=$CB_SEARCHRAM \
+  echo "Cluster name: $CB_CLUSTER_NAME"
+
+  # Change the name of the cluster if the user provided a cluster name
+  if [[ ! -z $CB_CLUSTER_NAME ]]; then
+    echo "Changing cluster name to $CB_CLUSTER_NAME..."
+    curl -Ss -X POST http://127.0.0.1:8091/pools/default -d clusterName=$CB_CLUSTER_NAME && echo
+  fi
+
+  curl -Ss -X POST http://127.0.0.1:8091/pools/default \
+      -d memoryQuota=$CB_DATARAM \
+      -d indexMemoryQuota=$CB_INDEXRAM \
+      -d ftsMemoryQuota=$CB_SEARCHRAM \
+      -d cbasMemoryQuota=$CB_ANALYTICSRAM \
+      -d eventingMemoryQuota=$CB_EVENTINGRAM \
     && echo \
     && break
 
