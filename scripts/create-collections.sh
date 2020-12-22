@@ -13,8 +13,6 @@ if [ -e "/startup/$bucketName/collections.json" ]; then
     if [ $scopeName != "_default" ]; then
       echo "Creating scope: $scopeName..."
       curl -Ss -X POST -u "$CB_USERNAME:$CB_PASSWORD" http://localhost:8091/pools/default/buckets/$bucketName/collections -d name=$scopeName
-
-      sleep 5
     fi
 
     # Create the collections within the appropriate scope
