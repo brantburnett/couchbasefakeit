@@ -24,7 +24,7 @@ jobs:
           - enterprise-6.0.3
           - enterprise-6.5.1
           - community-6.5.1
-          - enterprise-6.6.0
+          - enterprise-6.6.1
           - community-7.0.0-beta
           - enterprise-7.0.0-beta
 
@@ -55,7 +55,7 @@ jobs:
           - enterprise-6.0.3
           - enterprise-6.5.1
           - community-6.5.1
-          - enterprise-6.6.0
+          - enterprise-6.6.1
           - community-7.0.0-beta
           - enterprise-7.0.0-beta
 
