@@ -137,7 +137,6 @@ The values to replace are `your_scope_name` and the values in the `collections` 
  ```json
 [
   {
-    "bucket": "sample",
     "rbacName": "App User",
     "rbacUsername": "app-user",
     "rbacPassword": "password",

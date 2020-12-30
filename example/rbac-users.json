@@ -1,6 +1,5 @@
 [
   {
-    "bucket": "sample",
     "rbacName": "App User",
     "rbacUsername": "app-user",
     "rbacPassword": "password",
