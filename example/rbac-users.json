@@ -1,0 +1,10 @@
+[
+  {
+    "rbacName": "App User",
+    "rbacUsername": "app-user",
+    "rbacPassword": "password",
+    "roles": [
+      "bucket_full_access[sample]"
+    ]
+  }
+]

@@ -23,6 +23,7 @@ if [ ! -e "/nodestatus/initialized" ] ; then
   done < <(cat /startup/buckets.json | jq -r '.[].name')
 
   $scriptPath/create-events.sh
+  $scriptPath/create-rbac-users.sh
 
   # Done
   echo "Couchbase Server initialized."
