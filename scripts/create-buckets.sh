@@ -18,7 +18,7 @@ do
 done
 
 echo "Couchbase Version: $CB_VERSION"
-if [[ $CB_VERSION > "6." ]]; then
+if [[ $CB_VERSION > "7." ]]; then
   echo "About to create scopes and collections..."
 
   scriptPath=$(dirname $(realpath $0))
