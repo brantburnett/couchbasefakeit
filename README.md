@@ -130,6 +130,28 @@ The values to replace are `your_scope_name` and the values in the `collections` 
 }
 ```
 
+### RBAC Configuration
+
+ To configure RBAC users for Couchbase Server versions 5+, simply place a `rbac-users.json` file in the `/startup` directory of your image. This file should be an array of JSON objects that define the various users and roles that need to be associated with each user. See the following example on how to structure the file:
+
+ ```json
+[
+  {
+    "rbacName": "App User",
+    "rbacUsername": "app-user",
+    "rbacPassword": "password",
+    "roles": [
+      "bucket_full_access[sample]"
+    ]
+  },
+  {
+    ...
+  }
+]
+```
+
+ Information on the available roles can be found [here](https://docs.couchbase.com/server/current/learn/security/roles.html). If you want to limit the role to a specific bucket, place the bucket name in brackets at the end of the name, i.e. `bucket_full_access[sample]`.
+
 ### Generating Data With FakeIt
 
 To generate data with FakeIt, create a directory underneath `/startup` with the name of your bucket, and directory beneath that named `models`.  For example, `/startup/sample/models`.  Note that the names are case sensitive.  Add your FakeIt YAML models to the models directory.
