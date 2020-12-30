@@ -9,9 +9,8 @@
     },
     "my_scope": {
       "collections": [
-        "collection_1",
-        "collection_2",
-        "collection_3"
+        "default",
+        "users"
       ]
     }
   }

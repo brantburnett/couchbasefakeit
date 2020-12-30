@@ -2,8 +2,8 @@ name: Users
 type: object
 key: id
 data:
-  min: 50
-  max: 100
+  min: 5
+  max: 10
 properties:
   id:
     data:
