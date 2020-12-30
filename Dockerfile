@@ -28,8 +28,7 @@ COPY ./startup/ /startup/
 # Configure default environment
 ENV CB_DATARAM=512 CB_INDEXRAM=256 CB_SEARCHRAM=256 CB_ANALYTICSRAM=1024 CB_EVENTINGRAM=256 \
 	CB_SERVICES=kv,n1ql,index,fts CB_INDEXSTORAGE=forestdb \
-	CB_USERNAME=Administrator CB_PASSWORD=password \
-	FAKEIT_BUCKETTIMEOUT=5000
+	CB_USERNAME=Administrator CB_PASSWORD=password
 
 RUN mkdir /nodestatus
 VOLUME /nodestatus
