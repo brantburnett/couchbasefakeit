@@ -193,7 +193,7 @@ BUILD INDEX ON default (`#primary`, `Types`);
 
 ### Creating Indexes with YAML
 
-Alternatively, you may add YAML files with index definitions under the `/startup/<bucketname>/indexes` folder.  This operation uses [couchbase-index-manager](https://www.npmjs.com/package/couchbase-index-manager) to create the indexes.  [See here](https://www.npmjs.com/package/couchbase-index-manager#definition-files) for an explanation of the YAML file format.
+Alternatively, you may add YAML files with index definitions under the `/startup/<bucketname>/indexes` folder.  This operation uses [couchbase-index-manager](https://www.npmjs.com/package/couchbase-index-manager-cli) to create the indexes.  [See here](https://github.com/brantburnett/couchbase-index-manager/tree/master/packages/couchbase-index-manager-cli#definition-files) for an explanation of the YAML file format.
 
 ### Analytics Dataset Setup
 
