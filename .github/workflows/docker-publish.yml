@@ -8,13 +8,8 @@ on:
   # Run tests for any PRs.
   pull_request:
 
-env:
-  IMAGE_NAME: btburnett3/couchbasefakeit
-
 jobs:
-  # Run tests.
-  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
-  test:
+  build:
     runs-on: ubuntu-latest
 
     strategy:
@@ -30,49 +25,25 @@ jobs:
           - enterprise-7.2.2
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Run tests
-        run: |
-          if [ -f docker-compose.test.yml ]; then
-            docker-compose --file docker-compose.test.yml build
-            docker-compose --file docker-compose.test.yml run sut
-          else
-            docker build . --file Dockerfile --build-arg COUCHBASE_TAG=${{ matrix.couchbase-version }}
-          fi
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: btburnett3
+          password: ${{ secrets.DOCKER_TOKEN }}
 
-  # See also https://docs.docker.com/docker-hub/builds/
-  push:
-    # Ensure test job passes before pushing image.
-    needs: test
-
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push'
-
-    strategy:
-      matrix:
-        couchbase-version:
-          - enterprise-6.6.0
-          - enterprise-6.6.6
-          - community-7.0.2
-          - enterprise-7.0.5
-          - community-7.1.1
-          - enterprise-7.1.5
-          - community-7.2.2
-          - enterprise-7.2.2
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Build image
-        run: docker build . --file Dockerfile  --build-arg COUCHBASE_TAG=${{ matrix.couchbase-version }} --tag $IMAGE_NAME
-
-      - name: Log into registry
-        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u btburnett3 --password-stdin
-
-      - name: Push image
-        run: |
-          echo Version: ${{ matrix.couchbase-version }}
-
-          docker tag $IMAGE_NAME $IMAGE_NAME:${{ matrix.couchbase-version }}
-          docker push $IMAGE_NAME:${{ matrix.couchbase-version }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          build-args: "COUCHBASE_TAG=${{ matrix.couchbase-version }}"
+          platforms: linux/amd64
+          push: ${{ github.event_name == 'push' }}
+          tags: "btburnett3/couchbasefakeit:${{ matrix.couchbase-version }}"
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
