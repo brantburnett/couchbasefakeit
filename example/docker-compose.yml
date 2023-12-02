@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   couchbase:
-    image: btburnett3/couchbasefakeit:enterprise-7.0.3
+    image: btburnett3/couchbasefakeit:enterprise-7.2.3
     environment:
       - CB_SERVICES=kv,n1ql,index,fts,eventing,cbas
     volumes:
