@@ -6,17 +6,17 @@ couchbasefakeit is a Docker image designed for testing and local development.  I
 
 This can be very useful in reducing developer friction, providing a way to quickly and easily spin up a Couchbase server preinitialized for your application.  By including an Dockerfile and associated configuration files within your source control repo, you can version your development data definitions along with your application.
 
+> **NOTE:** couchbasefakeit is built on top of [couchbase-quickinit](https://github.com/brantburnett/couchbase-quickinit), adding support for data generation using FakeIt. If you do not require data generation, simply use `couchbase-quickinit` directly.
+
 ## Pulling
 
 The latest version can be pulled using:
 
 ```sh
-docker pull btburnett3/couchbasefakeit:latest
+docker pull btburnett3/couchbasefakeit:enterprise-7.2.3
 ```
 
-The `latest` tag will be the latest Enterprise edition of Couchbase, with the latest release of FakeIt.
-
-Specific versions may also be available, such as `enterprise-4.6.3`.  This would be the Enterprise edition of Couchbase, version 4.6.3.
+Other may also be available, such as `community-7.0.2`.  This would be the Community edition of Couchbase, version 7.0.2.
 
 ## Using couchbasefakeit
 

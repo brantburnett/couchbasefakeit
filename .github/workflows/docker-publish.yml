@@ -15,14 +15,13 @@ jobs:
     strategy:
       matrix:
         couchbase-version:
-          - enterprise-6.6.0
           - enterprise-6.6.6
           - community-7.0.2
           - enterprise-7.0.5
           - community-7.1.1
-          - enterprise-7.1.5
+          - enterprise-7.1.6
           - community-7.2.2
-          - enterprise-7.2.2
+          - enterprise-7.2.3
 
     steps:
       - uses: actions/checkout@v4
