@@ -24,6 +24,8 @@ jobs:
           - enterprise-7.2.3
           - community-7.6.2
           - enterprise-7.6.3
+          - enterprise-8.0.0
+          - community-8.0.0
 
     steps:
       - uses: actions/checkout@v4
