@@ -14,16 +14,17 @@ FROM base as restore
 
 # Install build essentials in a separate stage because we only need it during restore
 RUN apt-get update && \
-    apt-get install build-essential -y
+    apt-get install build-essential python3-setuptools -y
 
 # Copy package.json
 WORKDIR /fakeit
 COPY ./scripts/package*.json ./
 
-# Install fakeit
+# Install fakeit, using a newer node-gyp because the version bundled with npm 6 is incompatible with Python 3.11+
 RUN \. $NVM_DIR/nvm.sh && \
     nvm use 12.22.12 && \
-    npm ci
+    npm install -g node-gyp@9.4.1 && \
+    npm_config_node_gyp=$(npm prefix -g)/lib/node_modules/node-gyp/bin/node-gyp.js npm ci
 
 
 
